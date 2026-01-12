@@ -49,43 +49,48 @@ function initMusicPlayer() {
 
     let isPlaying = false;
 
-    // 음악 재생/정지 토글
-    musicBtn.addEventListener('click', function() {
+    // 음악 재생 함수
+    function playMusic() {
+        bgm.play().then(() => {
+            musicBtn.classList.add('playing');
+            isPlaying = true;
+        }).catch(error => {
+            console.log('Play blocked:', error);
+        });
+    }
+
+    // 음악 정지 함수
+    function pauseMusic() {
+        bgm.pause();
+        musicBtn.classList.remove('playing');
+        isPlaying = false;
+    }
+
+    // 음악 버튼 클릭 (PC & 모바일)
+    musicBtn.addEventListener('click', function(e) {
+        e.stopPropagation(); // 이벤트 버블링 방지
         if (isPlaying) {
-            bgm.pause();
-            musicBtn.classList.remove('playing');
-            isPlaying = false;
+            pauseMusic();
         } else {
-            bgm.play().then(() => {
-                musicBtn.classList.add('playing');
-                isPlaying = true;
-            }).catch(error => {
-                console.log('Auto-play blocked:', error);
-                showToast('음악을 재생하려면 다시 클릭해주세요');
-            });
+            playMusic();
         }
     });
 
-    // 페이지 첫 클릭/터치 시 자동 재생 시도
-    let firstInteraction = true;
-    const playOnFirstInteraction = function() {
-        if (firstInteraction && !isPlaying) {
-            bgm.play().then(() => {
-                musicBtn.classList.add('playing');
-                isPlaying = true;
-                firstInteraction = false;
-            }).catch(error => {
-                console.log('Auto-play blocked on first interaction:', error);
-            });
+    // 마우스 클릭도 추가 (PC용)
+    musicBtn.addEventListener('mousedown', function(e) {
+        e.stopPropagation();
+    });
+
+    // 페이지 첫 터치 시 자동 재생 (모바일)
+    let firstTouch = true;
+    document.addEventListener('touchstart', function() {
+        if (firstTouch && !isPlaying) {
+            playMusic();
+            firstTouch = false;
         }
-        document.removeEventListener('click', playOnFirstInteraction);
-        document.removeEventListener('touchstart', playOnFirstInteraction);
-    };
+    }, { once: true });
 
-    document.addEventListener('click', playOnFirstInteraction);
-    document.addEventListener('touchstart', playOnFirstInteraction);
-
-    // 음악 종료 시 처리 (loop 속성 있지만 혹시 모를 경우 대비)
+    // 음악 종료 시 처리
     bgm.addEventListener('ended', function() {
         bgm.currentTime = 0;
         bgm.play();
