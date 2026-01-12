@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>축하 메시지 - 모바일 청첩장</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="page-header">
+        <a href="index.html" class="btn-back">← 돌아가기</a>
+        <h1>축하 메시지</h1>
+    </header>
+
+    <!-- 방명록 작성 폼 -->
+    <section class="section">
+        <form id="guestbook-form" class="guestbook-form">
+            <div class="form-row">
+                <input type="text" id="gb-name" name="name" placeholder="이름" required>
+                <input type="password" id="gb-password" name="password" placeholder="비밀번호" required>
+            </div>
+            <textarea id="gb-message" name="message" placeholder="축하 메시지를 입력해주세요" required></textarea>
+            <button type="submit" class="btn-submit">메시지 남기기</button>
+        </form>
+    </section>
+
+    <!-- 방명록 전체 목록 -->
+    <section class="section">
+        <div class="guestbook-stats">
+            총 <span id="total-count">0</span>개의 축하 메시지
+        </div>
+        <div id="guestbook-list-full" class="guestbook-list guestbook-list-full">
+            <!-- JavaScript로 전체 목록 로드 -->
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div id="pagination" class="pagination">
+            <!-- JavaScript로 생성 -->
+        </div>
+    </section>
+
+    <!-- 삭제 확인 모달 -->
+    <div id="delete-modal" class="modal delete-modal">
+        <div class="modal-dialog">
+            <h3>메시지 삭제</h3>
+            <p>비밀번호를 입력해주세요</p>
+            <input type="password" id="delete-password" placeholder="비밀번호">
+            <div class="modal-buttons">
+                <button id="btn-cancel-delete" class="btn-cancel">취소</button>
+                <button id="btn-confirm-delete" class="btn-confirm">삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 메시지 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // 전체 목록 페이지용 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllGuestbook();
+        });
+    </script>
+</body>
+</html>
