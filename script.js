@@ -761,9 +761,11 @@ END:VCALENDAR`;
     }
 
     // 링크 복사
+    const shareUrl = 'https://m.site.naver.com/1ZcFz';
+
     if (btnCopyLink) {
         btnCopyLink.addEventListener('click', () => {
-            copyToClipboard(window.location.href);
+            copyToClipboard(shareUrl);
             showToast('링크가 복사되었습니다');
         });
     }
@@ -779,16 +781,16 @@ END:VCALENDAR`;
                         description: '2026년 5월 10일 일요일 오후 12시\n에스칼라디움 3층 단독홀',
                         imageUrl: window.location.href + 'images/main.jpg',
                         link: {
-                            mobileWebUrl: window.location.href,
-                            webUrl: window.location.href
+                            mobileWebUrl: shareUrl,
+                            webUrl: shareUrl
                         }
                     },
                     buttons: [
                         {
                             title: '청첩장 보기',
                             link: {
-                                mobileWebUrl: window.location.href,
-                                webUrl: window.location.href
+                                mobileWebUrl: shareUrl,
+                                webUrl: shareUrl
                             }
                         }
                     ]
