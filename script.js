@@ -81,14 +81,22 @@ function initMusicPlayer() {
         e.stopPropagation();
     });
 
-    // 페이지 첫 터치 시 자동 재생 (모바일)
-    let firstTouch = true;
-    document.addEventListener('touchstart', function() {
-        if (firstTouch && !isPlaying) {
+    // 페이지 첫 클릭/터치 시 자동 재생 (PC & 모바일)
+    let firstInteraction = true;
+    function handleFirstInteraction(e) {
+        // 음악 버튼 클릭은 제외 (버튼 핸들러에서 처리)
+        if (musicBtn.contains(e.target)) return;
+
+        if (firstInteraction && !isPlaying) {
             playMusic();
-            firstTouch = false;
+            firstInteraction = false;
         }
-    }, { once: true });
+        document.removeEventListener('click', handleFirstInteraction);
+        document.removeEventListener('touchstart', handleFirstInteraction);
+    }
+
+    document.addEventListener('click', handleFirstInteraction);
+    document.addEventListener('touchstart', handleFirstInteraction);
 
     // 음악 종료 시 처리
     bgm.addEventListener('ended', function() {
