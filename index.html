@@ -135,14 +135,41 @@
         <div class="section-title">
             <h2>갤러리</h2>
         </div>
-        <div class="gallery-grid">
-            <!-- 이미지는 나중에 추가 -->
-            <div class="gallery-item"><img src="images/gallery1.jpg" alt="갤러리 1"></div>
-            <div class="gallery-item"><img src="images/gallery2.jpg" alt="갤러리 2"></div>
-            <div class="gallery-item"><img src="images/gallery3.jpg" alt="갤러리 3"></div>
-            <div class="gallery-item"><img src="images/gallery4.jpg" alt="갤러리 4"></div>
-            <div class="gallery-item"><img src="images/gallery5.jpg" alt="갤러리 5"></div>
-            <div class="gallery-item"><img src="images/gallery6.jpg" alt="갤러리 6"></div>
+        <div class="gallery-slider">
+            <div class="gallery-pages">
+                <!-- 페이지 1: 1~9번 -->
+                <div class="gallery-page active">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="images/gallery1.jpg" alt="갤러리 1"></div>
+                        <div class="gallery-item"><img src="images/gallery2.jpg" alt="갤러리 2"></div>
+                        <div class="gallery-item"><img src="images/gallery3.jpg" alt="갤러리 3"></div>
+                        <div class="gallery-item"><img src="images/gallery4.jpg" alt="갤러리 4"></div>
+                        <div class="gallery-item"><img src="images/gallery5.jpg" alt="갤러리 5"></div>
+                        <div class="gallery-item"><img src="images/gallery6.jpg" alt="갤러리 6"></div>
+                        <div class="gallery-item"><img src="images/gallery7.jpg" alt="갤러리 7"></div>
+                        <div class="gallery-item"><img src="images/gallery8.jpg" alt="갤러리 8"></div>
+                        <div class="gallery-item"><img src="images/gallery9.jpg" alt="갤러리 9"></div>
+                    </div>
+                </div>
+                <!-- 페이지 2: 10~18번 -->
+                <div class="gallery-page">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="images/gallery10.jpg" alt="갤러리 10"></div>
+                        <div class="gallery-item"><img src="images/gallery11.jpg" alt="갤러리 11"></div>
+                        <div class="gallery-item"><img src="images/gallery12.jpg" alt="갤러리 12"></div>
+                        <div class="gallery-item"><img src="images/gallery13.jpg" alt="갤러리 13"></div>
+                        <div class="gallery-item"><img src="images/gallery14.jpg" alt="갤러리 14"></div>
+                        <div class="gallery-item"><img src="images/gallery15.jpg" alt="갤러리 15"></div>
+                        <div class="gallery-item"><img src="images/gallery16.jpg" alt="갤러리 16"></div>
+                        <div class="gallery-item"><img src="images/gallery17.jpg" alt="갤러리 17"></div>
+                        <div class="gallery-item"><img src="images/gallery18.jpg" alt="갤러리 18"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-dots">
+                <span class="gallery-dot active" data-page="0"></span>
+                <span class="gallery-dot" data-page="1"></span>
+            </div>
         </div>
     </section>
 
@@ -249,9 +276,24 @@
             <div id="bride-accounts" class="account-list">
                 <div class="account-item">
                     <div>
-                        <p class="account-holder">계좌 정보 준비중</p>
-                        <p class="account-info">-</p>
+                        <p class="account-holder">손민지 (신부)</p>
+                        <p class="account-info">카카오뱅크 33327640669</p>
                     </div>
+                    <button class="btn-copy" data-account="33327640669">복사</button>
+                </div>
+                <div class="account-item">
+                    <div>
+                        <p class="account-holder">손병문 (신부 아버지)</p>
+                        <p class="account-info">신한은행 110143929067</p>
+                    </div>
+                    <button class="btn-copy" data-account="110143929067">복사</button>
+                </div>
+                <div class="account-item">
+                    <div>
+                        <p class="account-holder">이수윤 (신부 어머니)</p>
+                        <p class="account-info">기업은행 27007154401012</p>
+                    </div>
+                    <button class="btn-copy" data-account="27007154401012">복사</button>
                 </div>
             </div>
         </div>

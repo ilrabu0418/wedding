@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initDdayCounter();
     initMap();
     initGallery();
+    initGallerySlider();
     initContactToggle();
     initAccountToggle();
     initGuestbook();
@@ -168,6 +169,56 @@ function initMap() {
 
             // 지도 중심 이동
             map.setCenter(coords);
+        }
+    });
+}
+
+// ========== 갤러리 슬라이더 ==========
+function initGallerySlider() {
+    const pages = document.querySelectorAll('.gallery-page');
+    const dots = document.querySelectorAll('.gallery-dot');
+    const slider = document.querySelector('.gallery-slider');
+
+    if (!slider || pages.length === 0) return;
+
+    let currentPage = 0;
+    let startX = 0;
+    let endX = 0;
+
+    // 페이지 변경 함수
+    function goToPage(pageIndex) {
+        pages.forEach((page, i) => {
+            page.classList.toggle('active', i === pageIndex);
+        });
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === pageIndex);
+        });
+        currentPage = pageIndex;
+    }
+
+    // 점 클릭 이벤트
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const pageIndex = parseInt(dot.getAttribute('data-page'));
+            goToPage(pageIndex);
+        });
+    });
+
+    // 스와이프 이벤트
+    slider.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    slider.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+            if (diff > 0 && currentPage < pages.length - 1) {
+                goToPage(currentPage + 1);
+            } else if (diff < 0 && currentPage > 0) {
+                goToPage(currentPage - 1);
+            }
         }
     });
 }
