@@ -1,15 +1,15 @@
 // ========== 설정 ==========
 const CONFIG = {
-    // Google Apps Script 웹 앱 URL (나중에 설정)
-    APPS_SCRIPT_URL: 'YOUR_GOOGLE_APPS_SCRIPT_URL',
+    // Google Apps Script 웹 앱 URL
+    APPS_SCRIPT_URL: 'https://script.google.com/macros/s/AKfycbzoP2JhJpm5Jg3ZQWdaCypjjTNSJeUDeQbSyXK1fd5G-9mEbkPdPl95GwAdyy0EuNis/exec',
 
     // 결혼식 정보
     WEDDING_DATE: '2026-05-10', // 결혼식 날짜 (YYYY-MM-DD)
     WEDDING_TIME: '12:00',       // 결혼식 시간 (HH:MM)
 
     // 예식장 좌표 (에스칼라디움 - 굴포천역)
-    VENUE_LAT: 37.5050,          // 위도
-    VENUE_LNG: 126.7227,         // 경도
+    VENUE_LAT: 37.4936,          // 위도
+    VENUE_LNG: 126.7230,         // 경도
     VENUE_NAME: '에스칼라디움',
     VENUE_ADDRESS: '인천 광역시 부평구 길주로 623',
 
@@ -23,14 +23,20 @@ const CONFIG = {
 
 // ========== 초기화 ==========
 document.addEventListener('DOMContentLoaded', function() {
+    // 카카오 SDK 초기화
+    if (typeof Kakao !== 'undefined' && !Kakao.isInitialized()) {
+        Kakao.init('bc6422965deb30a7a1ed4a95b6b6580e');
+    }
+
     initCalendar();
     initDdayCounter();
     initMap();
     initGallery();
+    initGallerySlider();
+    initContactToggle();
     initAccountToggle();
     initGuestbook();
     initShareButtons();
-    initAttendanceForm();
 });
 
 // ========== D-Day 카운터 ==========
@@ -107,9 +113,114 @@ function initCalendar() {
 }
 
 // ========== 지도 ==========
-// 지도는 링크 방식으로 연결 (API 키 불필요)
 function initMap() {
-    // 링크는 HTML에 직접 설정됨
+    const mapContainer = document.getElementById('kakao-map');
+    if (!mapContainer || typeof kakao === 'undefined') return;
+
+    // 기본 지도 생성
+    const map = new kakao.maps.Map(mapContainer, {
+        center: new kakao.maps.LatLng(37.5, 126.7),
+        level: 5
+    });
+
+    // 처음에는 지도 조작 비활성화
+    map.setDraggable(false);
+    map.setZoomable(false);
+
+    // 오버레이 추가 (클릭 안내)
+    const overlay = document.createElement('div');
+    overlay.className = 'map-touch-overlay';
+    overlay.innerHTML = '<span>지도를 터치하면 활성화됩니다</span>';
+    mapContainer.appendChild(overlay);
+
+    // 클릭하면 활성화
+    overlay.addEventListener('click', function() {
+        map.setDraggable(true);
+        map.setZoomable(true);
+        overlay.style.display = 'none';
+    });
+
+    // 지도 바깥 클릭하면 다시 비활성화
+    document.addEventListener('click', function(e) {
+        if (!mapContainer.contains(e.target)) {
+            map.setDraggable(false);
+            map.setZoomable(false);
+            overlay.style.display = 'flex';
+        }
+    });
+
+    // 주소로 좌표 검색
+    const geocoder = new kakao.maps.services.Geocoder();
+    geocoder.addressSearch('인천 부평구 삼산동 465-1', function(result, status) {
+        if (status === kakao.maps.services.Status.OK) {
+            const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+
+            // 마커 생성
+            const marker = new kakao.maps.Marker({
+                map: map,
+                position: coords
+            });
+
+            // 인포윈도우 생성
+            const infowindow = new kakao.maps.InfoWindow({
+                content: '<div style="padding:5px;font-size:12px;">에스칼라디움</div>'
+            });
+            infowindow.open(map, marker);
+
+            // 지도 중심 이동
+            map.setCenter(coords);
+        }
+    });
+}
+
+// ========== 갤러리 슬라이더 ==========
+function initGallerySlider() {
+    const pages = document.querySelectorAll('.gallery-page');
+    const dots = document.querySelectorAll('.gallery-dot');
+    const slider = document.querySelector('.gallery-slider');
+
+    if (!slider || pages.length === 0) return;
+
+    let currentPage = 0;
+    let startX = 0;
+    let endX = 0;
+
+    // 페이지 변경 함수
+    function goToPage(pageIndex) {
+        pages.forEach((page, i) => {
+            page.classList.toggle('active', i === pageIndex);
+        });
+        dots.forEach((dot, i) => {
+            dot.classList.toggle('active', i === pageIndex);
+        });
+        currentPage = pageIndex;
+    }
+
+    // 점 클릭 이벤트
+    dots.forEach(dot => {
+        dot.addEventListener('click', () => {
+            const pageIndex = parseInt(dot.getAttribute('data-page'));
+            goToPage(pageIndex);
+        });
+    });
+
+    // 스와이프 이벤트
+    slider.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    });
+
+    slider.addEventListener('touchend', (e) => {
+        endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (Math.abs(diff) > 50) {
+            if (diff > 0 && currentPage < pages.length - 1) {
+                goToPage(currentPage + 1);
+            } else if (diff < 0 && currentPage > 0) {
+                goToPage(currentPage - 1);
+            }
+        }
+    });
 }
 
 // ========== 갤러리 ==========
@@ -169,6 +280,21 @@ function initGallery() {
     });
 }
 
+// ========== 연락처 토글 ==========
+function initContactToggle() {
+    const contactToggles = document.querySelectorAll('.contact-toggle');
+
+    contactToggles.forEach(button => {
+        button.addEventListener('click', () => {
+            const targetId = button.getAttribute('data-target');
+            const targetList = document.getElementById(targetId);
+
+            button.classList.toggle('active');
+            targetList.classList.toggle('show');
+        });
+    });
+}
+
 // ========== 계좌번호 토글 & 복사 ==========
 function initAccountToggle() {
     const toggleButtons = document.querySelectorAll('.account-toggle');
@@ -211,10 +337,9 @@ async function handleGuestbookSubmit(e) {
     e.preventDefault();
 
     const name = document.getElementById('gb-name').value.trim();
-    const password = document.getElementById('gb-password').value;
     const message = document.getElementById('gb-message').value.trim();
 
-    if (!name || !password || !message) {
+    if (!name || !message) {
         showToast('모든 항목을 입력해주세요');
         return;
     }
@@ -222,20 +347,24 @@ async function handleGuestbookSubmit(e) {
     try {
         const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
             method: 'POST',
-            mode: 'no-cors',
             headers: {
-                'Content-Type': 'application/json',
+                'Content-Type': 'text/plain',
             },
             body: JSON.stringify({
                 action: 'write',
                 name: name,
-                password: password,
                 message: message
             })
         });
 
-        showToast('축하 메시지가 등록되었습니다');
-        e.target.reset();
+        const result = await response.json();
+        if (result.success) {
+            showToast('축하 메시지가 등록되었습니다');
+            e.target.reset();
+        } else {
+            showToast(result.error || '등록에 실패했습니다');
+            return;
+        }
 
         // 방명록 새로고침
         const guestbookList = document.getElementById('guestbook-list');
@@ -333,60 +462,165 @@ function createGuestbookItem(item, showDelete = false) {
     `;
 }
 
+// ========== 관리자 모드 ==========
+const ADMIN_PASSWORD = '0130';
+let isAdminMode = false;
 let deleteTargetId = null;
+let settingsClickCount = 0;
+let settingsClickTimer = null;
 
-function deleteGuestbookItem(id) {
-    deleteTargetId = id;
-    const modal = document.getElementById('delete-modal');
-    if (modal) {
-        modal.classList.add('show');
+function initAdminMode() {
+    const settingsBtn = document.getElementById('btn-settings');
+    const adminModal = document.getElementById('admin-modal');
+    const cancelAdminBtn = document.getElementById('btn-cancel-admin');
+    const confirmAdminBtn = document.getElementById('btn-confirm-admin');
+    const exitAdminBtn = document.getElementById('btn-exit-admin');
+    const adminBanner = document.getElementById('admin-mode-banner');
+    const deleteConfirmModal = document.getElementById('delete-confirm-modal');
+    const cancelDeleteBtn = document.getElementById('btn-cancel-delete');
+    const confirmDeleteBtn = document.getElementById('btn-confirm-delete');
+
+    // 설정 버튼 3번 연속 클릭 - 관리자 모드 진입 모달
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            if (isAdminMode) {
+                exitAdminMode();
+                return;
+            }
+
+            settingsClickCount++;
+
+            // 타이머 초기화
+            if (settingsClickTimer) {
+                clearTimeout(settingsClickTimer);
+            }
+
+            // 3번 클릭 시 모달 열기
+            if (settingsClickCount >= 3) {
+                settingsClickCount = 0;
+                adminModal.classList.add('show');
+            } else {
+                // 1초 내에 클릭하지 않으면 카운트 초기화
+                settingsClickTimer = setTimeout(() => {
+                    settingsClickCount = 0;
+                }, 1000);
+            }
+        });
     }
-}
 
-// 삭제 모달 이벤트 (guestbook.html에서 사용)
-document.addEventListener('DOMContentLoaded', function() {
-    const cancelBtn = document.getElementById('btn-cancel-delete');
-    const confirmBtn = document.getElementById('btn-confirm-delete');
-    const deleteModal = document.getElementById('delete-modal');
+    // 관리자 모달 취소
+    if (cancelAdminBtn) {
+        cancelAdminBtn.addEventListener('click', () => {
+            adminModal.classList.remove('show');
+            document.getElementById('admin-password').value = '';
+        });
+    }
 
-    if (cancelBtn) {
-        cancelBtn.addEventListener('click', () => {
-            deleteModal.classList.remove('show');
+    // 관리자 비밀번호 확인
+    if (confirmAdminBtn) {
+        confirmAdminBtn.addEventListener('click', () => {
+            const password = document.getElementById('admin-password').value;
+            if (password === ADMIN_PASSWORD) {
+                enterAdminMode();
+                adminModal.classList.remove('show');
+                document.getElementById('admin-password').value = '';
+            } else {
+                showToast('비밀번호가 일치하지 않습니다');
+            }
+        });
+    }
+
+    // 관리자 모드 해제 버튼
+    if (exitAdminBtn) {
+        exitAdminBtn.addEventListener('click', exitAdminMode);
+    }
+
+    // 삭제 확인 모달 - 취소
+    if (cancelDeleteBtn) {
+        cancelDeleteBtn.addEventListener('click', () => {
+            deleteConfirmModal.classList.remove('show');
             deleteTargetId = null;
         });
     }
 
-    if (confirmBtn) {
-        confirmBtn.addEventListener('click', async () => {
-            const password = document.getElementById('delete-password').value;
-            if (!password) {
-                showToast('비밀번호를 입력해주세요');
-                return;
-            }
+    // 삭제 확인 모달 - 삭제 실행
+    if (confirmDeleteBtn) {
+        confirmDeleteBtn.addEventListener('click', async () => {
+            if (!deleteTargetId) return;
 
             try {
                 const response = await fetch(CONFIG.APPS_SCRIPT_URL, {
                     method: 'POST',
-                    mode: 'no-cors',
                     headers: {
-                        'Content-Type': 'application/json',
+                        'Content-Type': 'text/plain',
                     },
                     body: JSON.stringify({
                         action: 'delete',
                         id: deleteTargetId,
-                        password: password
+                        adminPassword: ADMIN_PASSWORD
                     })
                 });
 
-                showToast('메시지가 삭제되었습니다');
-                deleteModal.classList.remove('show');
-                loadAllGuestbook();
+                const result = await response.json();
+                if (result.success) {
+                    showToast('메시지가 삭제되었습니다');
+                    deleteConfirmModal.classList.remove('show');
+                    deleteTargetId = null;
+                    loadAllGuestbook();
+                } else {
+                    showToast(result.error || '삭제에 실패했습니다');
+                }
             } catch (error) {
                 showToast('삭제에 실패했습니다');
             }
         });
     }
-});
+
+    // Enter 키로 비밀번호 확인
+    const adminPasswordInput = document.getElementById('admin-password');
+    if (adminPasswordInput) {
+        adminPasswordInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                confirmAdminBtn.click();
+            }
+        });
+    }
+}
+
+function enterAdminMode() {
+    isAdminMode = true;
+    const adminBanner = document.getElementById('admin-mode-banner');
+    const guestbookListFull = document.getElementById('guestbook-list-full');
+
+    if (adminBanner) adminBanner.style.display = 'flex';
+    if (guestbookListFull) guestbookListFull.classList.add('admin-mode');
+
+    showToast('관리자 모드가 활성화되었습니다');
+}
+
+function exitAdminMode() {
+    isAdminMode = false;
+    const adminBanner = document.getElementById('admin-mode-banner');
+    const guestbookListFull = document.getElementById('guestbook-list-full');
+
+    if (adminBanner) adminBanner.style.display = 'none';
+    if (guestbookListFull) guestbookListFull.classList.remove('admin-mode');
+
+    showToast('관리자 모드가 해제되었습니다');
+}
+
+function deleteGuestbookItem(id) {
+    if (!isAdminMode) {
+        showToast('관리자 모드에서만 삭제할 수 있습니다');
+        return;
+    }
+
+    deleteTargetId = id;
+    const modal = document.getElementById('delete-confirm-modal');
+    if (modal) {
+        modal.classList.add('show');
+    }
+}
 
 // ========== 참석 의사 전달 ==========
 function initAttendanceForm() {
@@ -429,30 +663,34 @@ function initShareButtons() {
     const btnCopyLink = document.getElementById('btn-copy-link');
     const btnKakaoShare = document.getElementById('btn-kakao-share');
 
-    // 일정 등록 (ICS 파일 생성)
+    // 일정 등록 (ICS 파일 - 기본 캘린더 앱으로 열림)
     if (btnAddCalendar) {
         btnAddCalendar.addEventListener('click', () => {
-            const weddingDateTime = new Date(CONFIG.WEDDING_DATE + 'T' + CONFIG.WEDDING_TIME);
-            const endDateTime = new Date(weddingDateTime.getTime() + 2 * 60 * 60 * 1000); // 2시간 후
-
             const icsContent = `BEGIN:VCALENDAR
 VERSION:2.0
+PRODID:-//Wedding//Invitation//KO
 BEGIN:VEVENT
-DTSTART:${formatDateForICS(weddingDateTime)}
-DTEND:${formatDateForICS(endDateTime)}
-SUMMARY:결혼식
-LOCATION:${CONFIG.VENUE_NAME}
-DESCRIPTION:${CONFIG.VENUE_ADDRESS}
+UID:wedding-2026-05-10@invitation
+DTSTART:20260510T030000Z
+DTEND:20260510T050000Z
+SUMMARY:문승재 ♥ 손민지 결혼식
+LOCATION:에스칼라디움 3층 단독홀, 인천 부평구 삼산동 465-1
+DESCRIPTION:문승재 ♥ 손민지 결혼식에 초대합니다.
 END:VEVENT
 END:VCALENDAR`;
 
             const blob = new Blob([icsContent], { type: 'text/calendar;charset=utf-8' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'wedding.ics';
-            link.click();
+            const url = URL.createObjectURL(blob);
 
-            showToast('캘린더 파일이 다운로드됩니다');
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = 'wedding.ics';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            URL.revokeObjectURL(url);
+
+            showToast('캘린더에 추가하려면 다운로드된 파일을 열어주세요');
         });
     }
 
@@ -471,9 +709,9 @@ END:VCALENDAR`;
                 Kakao.Share.sendDefault({
                     objectType: 'feed',
                     content: {
-                        title: '신랑이름 ♥ 신부이름 결혼합니다',
-                        description: CONFIG.WEDDING_DATE + ' ' + CONFIG.WEDDING_TIME + '\n' + CONFIG.VENUE_NAME,
-                        imageUrl: window.location.origin + '/images/main.jpg',
+                        title: '문승재 ♥ 손민지 결혼합니다',
+                        description: '2026년 5월 10일 일요일 오후 12시\n에스칼라디움 3층 단독홀',
+                        imageUrl: window.location.href + 'images/main.jpg',
                         link: {
                             mobileWebUrl: window.location.href,
                             webUrl: window.location.href

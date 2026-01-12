@@ -9,15 +9,19 @@
     <meta property="og:type" content="website">
     <meta property="og:title" content="문승재 ♥ 손민지 결혼합니다">
     <meta property="og:description" content="2026년 5월 10일 일요일 오후 12시">
-    <meta property="og:image" content="images/main.jpg">
+    <meta property="og:image" content="main.jpg">
 
     <link rel="stylesheet" href="style.css">
+    <!-- 카카오맵 API -->
+    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=bc6422965deb30a7a1ed4a95b6b6580e&libraries=services"></script>
+    <!-- 카카오톡 공유 SDK -->
+    <script src="https://t1.kakaocdn.net/kakao_js_sdk/2.5.0/kakao.min.js"></script>
 </head>
 <body>
     <!-- ========== 1. 메인 비주얼 ========== -->
     <section id="main-visual" class="section">
         <div class="main-image-wrapper">
-            <img src="images/main.jpg" alt="메인 사진" class="main-image">
+            <img src="main.jpg" alt="메인 사진" class="main-image">
         </div>
         <div class="main-text">
             <p class="wedding-date">2026. 05. 10 SUN PM 12:00</p>
@@ -47,7 +51,7 @@
         </div>
         <div class="family-info">
             <p><span class="father">문병철</span> · <span class="mother">마송자</span>의 아들 <span class="name">승재</span></p>
-            <p><span class="father">손병문</span> · <span class="mother">이수윤</span>의 딸 <span class="name">민지</span></p>
+            <p><span class="father">손병문</span> · <span class="mother">이수윤</span>의 &nbsp;&nbsp;딸&nbsp; <span class="name">민지</span></p>
         </div>
     </section>
 
@@ -56,6 +60,7 @@
         <div class="section-title">
             <h2>연락처</h2>
         </div>
+        <!-- 신랑측 -->
         <div class="contact-group">
             <h3>신랑측</h3>
             <div class="contact-item">
@@ -66,23 +71,30 @@
                     <a href="sms:010-5555-4441" class="btn-sms">문자</a>
                 </div>
             </div>
-            <div class="contact-item">
-                <span class="contact-label">신랑 아버지</span>
-                <span class="contact-name">문병철</span>
-                <div class="contact-buttons">
-                    <a href="tel:010-3332-1087" class="btn-call">전화</a>
-                    <a href="sms:010-3332-1087" class="btn-sms">문자</a>
+            <button class="contact-toggle" data-target="groom-parents">
+                <span>혼주에게 연락하기</span>
+                <span class="toggle-icon">▼</span>
+            </button>
+            <div id="groom-parents" class="contact-parents">
+                <div class="contact-item">
+                    <span class="contact-label">아버지</span>
+                    <span class="contact-name">문병철</span>
+                    <div class="contact-buttons">
+                        <a href="tel:010-3332-1087" class="btn-call">전화</a>
+                        <a href="sms:010-3332-1087" class="btn-sms">문자</a>
+                    </div>
                 </div>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">신랑 어머니</span>
-                <span class="contact-name">마송자</span>
-                <div class="contact-buttons">
-                    <a href="tel:010-3430-7553" class="btn-call">전화</a>
-                    <a href="sms:010-3430-7553" class="btn-sms">문자</a>
+                <div class="contact-item">
+                    <span class="contact-label">어머니</span>
+                    <span class="contact-name">마송자</span>
+                    <div class="contact-buttons">
+                        <a href="tel:010-3430-7553" class="btn-call">전화</a>
+                        <a href="sms:010-3430-7553" class="btn-sms">문자</a>
+                    </div>
                 </div>
             </div>
         </div>
+        <!-- 신부측 -->
         <div class="contact-group">
             <h3>신부측</h3>
             <div class="contact-item">
@@ -93,77 +105,71 @@
                     <a href="sms:010-6677-7729" class="btn-sms">문자</a>
                 </div>
             </div>
-            <div class="contact-item">
-                <span class="contact-label">신부 아버지</span>
-                <span class="contact-name">손병문</span>
-                <div class="contact-buttons">
-                    <a href="tel:" class="btn-call">전화</a>
-                    <a href="sms:" class="btn-sms">문자</a>
+            <button class="contact-toggle" data-target="bride-parents">
+                <span>혼주에게 연락하기</span>
+                <span class="toggle-icon">▼</span>
+            </button>
+            <div id="bride-parents" class="contact-parents">
+                <div class="contact-item">
+                    <span class="contact-label">아버지</span>
+                    <span class="contact-name">손병문</span>
+                    <div class="contact-buttons">
+                        <a href="tel:010-6667-6810" class="btn-call">전화</a>
+                        <a href="sms:010-6667-6810" class="btn-sms">문자</a>
+                    </div>
                 </div>
-            </div>
-            <div class="contact-item">
-                <span class="contact-label">신부 어머니</span>
-                <span class="contact-name">이수윤</span>
-                <div class="contact-buttons">
-                    <a href="tel:010-6436-1646" class="btn-call">전화</a>
-                    <a href="sms:010-6436-1646" class="btn-sms">문자</a>
+                <div class="contact-item">
+                    <span class="contact-label">어머니</span>
+                    <span class="contact-name">이수윤</span>
+                    <div class="contact-buttons">
+                        <a href="tel:010-6436-1646" class="btn-call">전화</a>
+                        <a href="sms:010-6436-1646" class="btn-sms">문자</a>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- ========== 4. 참석 의사 전달 ========== -->
-    <section id="attendance" class="section">
-        <div class="section-title">
-            <h2>참석 의사 전달</h2>
-            <p class="section-subtitle">축하의 마음으로 참석해 주시면 감사하겠습니다</p>
-        </div>
-        <form id="attendance-form" class="attendance-form">
-            <div class="form-group">
-                <label for="guest-name">성함</label>
-                <input type="text" id="guest-name" name="name" placeholder="성함을 입력해주세요" required>
-            </div>
-            <div class="form-group">
-                <label for="guest-side">누구의 하객이신가요?</label>
-                <select id="guest-side" name="side">
-                    <option value="groom">신랑측</option>
-                    <option value="bride">신부측</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="guest-count">참석 인원</label>
-                <select id="guest-count" name="count">
-                    <option value="1">1명</option>
-                    <option value="2">2명</option>
-                    <option value="3">3명</option>
-                    <option value="4">4명</option>
-                    <option value="5">5명 이상</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label>식사 여부</label>
-                <div class="radio-group">
-                    <label><input type="radio" name="meal" value="yes" checked> 예정</label>
-                    <label><input type="radio" name="meal" value="no"> 미정</label>
-                </div>
-            </div>
-            <button type="submit" class="btn-submit">참석 의사 전달하기</button>
-        </form>
-    </section>
-
-    <!-- ========== 5. 갤러리 ========== -->
+    <!-- ========== 4. 갤러리 ========== -->
     <section id="gallery" class="section">
         <div class="section-title">
             <h2>갤러리</h2>
         </div>
-        <div class="gallery-grid">
-            <!-- 이미지는 나중에 추가 -->
-            <div class="gallery-item"><img src="images/gallery1.jpg" alt="갤러리 1"></div>
-            <div class="gallery-item"><img src="images/gallery2.jpg" alt="갤러리 2"></div>
-            <div class="gallery-item"><img src="images/gallery3.jpg" alt="갤러리 3"></div>
-            <div class="gallery-item"><img src="images/gallery4.jpg" alt="갤러리 4"></div>
-            <div class="gallery-item"><img src="images/gallery5.jpg" alt="갤러리 5"></div>
-            <div class="gallery-item"><img src="images/gallery6.jpg" alt="갤러리 6"></div>
+        <div class="gallery-slider">
+            <div class="gallery-pages">
+                <!-- 페이지 1: 1~9번 -->
+                <div class="gallery-page active">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="gallery1.jpg" alt="갤러리 1"></div>
+                        <div class="gallery-item"><img src="gallery2.jpg" alt="갤러리 2"></div>
+                        <div class="gallery-item"><img src="gallery3.jpg" alt="갤러리 3"></div>
+                        <div class="gallery-item"><img src="gallery4.jpg" alt="갤러리 4"></div>
+                        <div class="gallery-item"><img src="gallery5.jpg" alt="갤러리 5"></div>
+                        <div class="gallery-item"><img src="gallery6.jpg" alt="갤러리 6"></div>
+                        <div class="gallery-item"><img src="gallery7.jpg" alt="갤러리 7"></div>
+                        <div class="gallery-item"><img src="gallery8.jpg" alt="갤러리 8"></div>
+                        <div class="gallery-item"><img src="gallery9.jpg" alt="갤러리 9"></div>
+                    </div>
+                </div>
+                <!-- 페이지 2: 10~18번 -->
+                <div class="gallery-page">
+                    <div class="gallery-grid">
+                        <div class="gallery-item"><img src="gallery10.jpg" alt="갤러리 10"></div>
+                        <div class="gallery-item"><img src="gallery11.jpg" alt="갤러리 11"></div>
+                        <div class="gallery-item"><img src="gallery12.jpg" alt="갤러리 12"></div>
+                        <div class="gallery-item"><img src="gallery13.jpg" alt="갤러리 13"></div>
+                        <div class="gallery-item"><img src="gallery14.jpg" alt="갤러리 14"></div>
+                        <div class="gallery-item"><img src="gallery15.jpg" alt="갤러리 15"></div>
+                        <div class="gallery-item"><img src="gallery16.jpg" alt="갤러리 16"></div>
+                        <div class="gallery-item"><img src="gallery17.jpg" alt="갤러리 17"></div>
+                        <div class="gallery-item"><img src="gallery18.jpg" alt="갤러리 18"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="gallery-dots">
+                <span class="gallery-dot active" data-page="0"></span>
+                <span class="gallery-dot" data-page="1"></span>
+            </div>
         </div>
     </section>
 
@@ -205,6 +211,7 @@
             <p class="venue-address">인천 광역시 부평구 삼산동 465-1</p>
             <p class="venue-tel">TEL. 032-503-1555</p>
         </div>
+        <div id="kakao-map" class="kakao-map"></div>
         <div class="map-buttons">
             <a href="https://map.kakao.com/link/search/인천 부평구 삼산동 465-1" target="_blank" class="btn-map">카카오맵</a>
             <a href="https://map.naver.com/v5/search/인천 부평구 삼산동 465-1" target="_blank" class="btn-map">네이버지도</a>
@@ -245,6 +252,20 @@
                     </div>
                     <button class="btn-copy" data-account="01055554441">복사</button>
                 </div>
+                <div class="account-item">
+                    <div>
+                        <p class="account-holder">문병철 (신랑 아버지)</p>
+                        <p class="account-info">수협 11862107118</p>
+                    </div>
+                    <button class="btn-copy" data-account="11862107118">복사</button>
+                </div>
+                <div class="account-item">
+                    <div>
+                        <p class="account-holder">마송자 (신랑 어머니)</p>
+                        <p class="account-info">하나은행 40391060186907</p>
+                    </div>
+                    <button class="btn-copy" data-account="40391060186907">복사</button>
+                </div>
             </div>
         </div>
         <div class="account-group">
@@ -255,9 +276,24 @@
             <div id="bride-accounts" class="account-list">
                 <div class="account-item">
                     <div>
-                        <p class="account-holder">계좌 정보 준비중</p>
-                        <p class="account-info">-</p>
+                        <p class="account-holder">손민지 (신부)</p>
+                        <p class="account-info">카카오뱅크 3333276420669</p>
                     </div>
+                    <button class="btn-copy" data-account="3333276420669">복사</button>
+                </div>
+                <div class="account-item">
+                    <div>
+                        <p class="account-holder">손병문 (신부 아버지)</p>
+                        <p class="account-info">신한은행 110143929067</p>
+                    </div>
+                    <button class="btn-copy" data-account="110143929067">복사</button>
+                </div>
+                <div class="account-item">
+                    <div>
+                        <p class="account-holder">이수윤 (신부 어머니)</p>
+                        <p class="account-info">기업은행 27007154401012</p>
+                    </div>
+                    <button class="btn-copy" data-account="27007154401012">복사</button>
                 </div>
             </div>
         </div>
@@ -270,10 +306,7 @@
             <p class="section-subtitle">신랑 신부에게 축하 메시지를 남겨주세요</p>
         </div>
         <form id="guestbook-form" class="guestbook-form">
-            <div class="form-row">
-                <input type="text" id="gb-name" name="name" placeholder="이름" required>
-                <input type="password" id="gb-password" name="password" placeholder="비밀번호" required>
-            </div>
+            <input type="text" id="gb-name" name="name" placeholder="이름" required style="width: 100%; padding: 12px 15px; font-size: 0.9rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px;">
             <textarea id="gb-message" name="message" placeholder="축하 메시지를 입력해주세요" required></textarea>
             <button type="submit" class="btn-submit">메시지 남기기</button>
         </form>
@@ -286,16 +319,17 @@
     <!-- ========== 10. 하단 공유 버튼 ========== -->
     <section id="share" class="section share-section">
         <div class="share-buttons">
-            <button id="btn-add-calendar" class="share-btn">
-                <span class="share-icon">📅</span>
-                <span>일정 등록</span>
-            </button>
             <button id="btn-copy-link" class="share-btn">
-                <span class="share-icon">🔗</span>
+                <svg class="share-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/>
+                    <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/>
+                </svg>
                 <span>링크 복사</span>
             </button>
-            <button id="btn-kakao-share" class="share-btn">
-                <span class="share-icon">💬</span>
+            <button id="btn-kakao-share" class="share-btn kakao-btn">
+                <svg class="share-icon" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 3C6.48 3 2 6.58 2 11c0 2.8 1.86 5.25 4.64 6.63-.15.53-.54 1.92-.62 2.22-.1.37.14.37.29.27.12-.08 1.9-1.28 2.67-1.8.65.09 1.32.14 2.02.14 5.52 0 10-3.58 10-8 0-4.42-4.48-8-10-8z"/>
+                </svg>
                 <span>카카오톡 공유</span>
             </button>
         </div>
