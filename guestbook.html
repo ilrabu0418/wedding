@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>축하 메시지 - 모바일 청첩장</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 헤더 -->
+    <header class="page-header">
+        <a href="index.html" class="btn-back">← 돌아가기</a>
+        <h1>축하 메시지</h1>
+        <button id="btn-settings" class="btn-settings">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="3"></circle>
+                <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+            </svg>
+        </button>
+    </header>
+
+    <!-- 관리자 모드 표시 -->
+    <div id="admin-mode-banner" class="admin-mode-banner" style="display: none;">
+        <span>관리자 모드</span>
+        <button id="btn-exit-admin" class="btn-exit-admin">해제</button>
+    </div>
+
+    <!-- 방명록 작성 폼 -->
+    <section class="section">
+        <form id="guestbook-form" class="guestbook-form">
+            <input type="text" id="gb-name" name="name" placeholder="이름" required style="width: 100%; padding: 12px 15px; font-size: 0.9rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px;">
+            <textarea id="gb-message" name="message" placeholder="축하 메시지를 입력해주세요" required></textarea>
+            <button type="submit" class="btn-submit">메시지 남기기</button>
+        </form>
+    </section>
+
+    <!-- 방명록 전체 목록 -->
+    <section class="section">
+        <div class="guestbook-stats">
+            총 <span id="total-count">0</span>개의 축하 메시지
+        </div>
+        <div id="guestbook-list-full" class="guestbook-list guestbook-list-full">
+            <!-- JavaScript로 전체 목록 로드 -->
+        </div>
+
+        <!-- 페이지네이션 -->
+        <div id="pagination" class="pagination">
+            <!-- JavaScript로 생성 -->
+        </div>
+    </section>
+
+    <!-- 관리자 비밀번호 모달 -->
+    <div id="admin-modal" class="modal delete-modal">
+        <div class="modal-dialog">
+            <h3>관리자 모드</h3>
+            <p>비밀번호를 입력해주세요</p>
+            <input type="password" id="admin-password" placeholder="비밀번호">
+            <div class="modal-buttons">
+                <button id="btn-cancel-admin" class="btn-cancel">취소</button>
+                <button id="btn-confirm-admin" class="btn-confirm" style="background: var(--primary-color);">확인</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 삭제 확인 모달 -->
+    <div id="delete-confirm-modal" class="modal delete-modal">
+        <div class="modal-dialog">
+            <h3>메시지 삭제</h3>
+            <p>이 메시지를 삭제하시겠습니까?</p>
+            <div class="modal-buttons">
+                <button id="btn-cancel-delete" class="btn-cancel">취소</button>
+                <button id="btn-confirm-delete" class="btn-confirm">삭제</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast 메시지 -->
+    <div id="toast" class="toast"></div>
+
+    <script src="script.js"></script>
+    <script>
+        // 전체 목록 페이지용 초기화
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAllGuestbook();
+            initAdminMode();
+        });
+    </script>
+</body>
+</html>
