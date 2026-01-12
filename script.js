@@ -773,13 +773,14 @@ END:VCALENDAR`;
     // 카카오톡 공유
     if (btnKakaoShare) {
         btnKakaoShare.addEventListener('click', () => {
+            console.log('카카오톡 공유 URL:', shareUrl);
             if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
                 Kakao.Share.sendDefault({
                     objectType: 'feed',
                     content: {
                         title: '문승재 ♥ 손민지 결혼합니다',
                         description: '2026년 5월 10일 일요일 오후 12시\n에스칼라디움 3층 단독홀',
-                        imageUrl: window.location.href + 'images/main.jpg',
+                        imageUrl: 'https://ilrabu0418.github.io/wedding/images/main.jpg',
                         link: {
                             mobileWebUrl: shareUrl,
                             webUrl: shareUrl
