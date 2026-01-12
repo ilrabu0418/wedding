@@ -28,6 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
         Kakao.init('bc6422965deb30a7a1ed4a95b6b6580e');
     }
 
+    initMusicPlayer();
     initCalendar();
     initDdayCounter();
     initMap();
@@ -38,6 +39,58 @@ document.addEventListener('DOMContentLoaded', function() {
     initGuestbook();
     initShareButtons();
 });
+
+// ========== 배경음악 플레이어 ==========
+function initMusicPlayer() {
+    const bgm = document.getElementById('bgm');
+    const musicBtn = document.getElementById('music-btn');
+
+    if (!bgm || !musicBtn) return;
+
+    let isPlaying = false;
+
+    // 음악 재생/정지 토글
+    musicBtn.addEventListener('click', function() {
+        if (isPlaying) {
+            bgm.pause();
+            musicBtn.classList.remove('playing');
+            isPlaying = false;
+        } else {
+            bgm.play().then(() => {
+                musicBtn.classList.add('playing');
+                isPlaying = true;
+            }).catch(error => {
+                console.log('Auto-play blocked:', error);
+                showToast('음악을 재생하려면 다시 클릭해주세요');
+            });
+        }
+    });
+
+    // 페이지 첫 클릭/터치 시 자동 재생 시도
+    let firstInteraction = true;
+    const playOnFirstInteraction = function() {
+        if (firstInteraction && !isPlaying) {
+            bgm.play().then(() => {
+                musicBtn.classList.add('playing');
+                isPlaying = true;
+                firstInteraction = false;
+            }).catch(error => {
+                console.log('Auto-play blocked on first interaction:', error);
+            });
+        }
+        document.removeEventListener('click', playOnFirstInteraction);
+        document.removeEventListener('touchstart', playOnFirstInteraction);
+    };
+
+    document.addEventListener('click', playOnFirstInteraction);
+    document.addEventListener('touchstart', playOnFirstInteraction);
+
+    // 음악 종료 시 처리 (loop 속성 있지만 혹시 모를 경우 대비)
+    bgm.addEventListener('ended', function() {
+        bgm.currentTime = 0;
+        bgm.play();
+    });
+}
 
 // ========== D-Day 카운터 ==========
 function initDdayCounter() {

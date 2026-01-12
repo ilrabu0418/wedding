@@ -14,7 +14,7 @@
  */
 
 // 스프레드시트 ID (URL에서 /d/ 와 /edit 사이의 문자열)
-const SPREADSHEET_ID = 'YOUR_SPREADSHEET_ID';
+const SPREADSHEET_ID = '1bfNvMBa04qHVmjSxmUjW49MvEdPMaoFk8wzbVBDJAH4';
 
 // 시트 이름
 const GUESTBOOK_SHEET = '방명록';
@@ -67,10 +67,10 @@ function doPost(e) {
 
     switch (data.action) {
         case 'write':
-            result = writeGuestbook(data.name, data.password, data.message);
+            result = writeGuestbook(data.name, data.message);
             break;
         case 'delete':
-            result = deleteGuestbook(data.id, data.password);
+            result = deleteGuestbook(data.id, data.adminPassword);
             break;
         case 'attendance':
             result = writeAttendance(data.name, data.side, data.count, data.meal);
@@ -82,6 +82,9 @@ function doPost(e) {
     return ContentService.createTextOutput(JSON.stringify(result))
         .setMimeType(ContentService.MimeType.JSON);
 }
+
+// 관리자 비밀번호
+const ADMIN_PASSWORD = '0130';
 
 // ========== 방명록 함수 ==========
 
@@ -96,13 +99,13 @@ function readGuestbook(limit) {
 
     const startRow = Math.max(2, lastRow - limit + 1);
     const numRows = lastRow - startRow + 1;
-    const data = sheet.getRange(startRow, 1, numRows, 5).getValues();
+    const data = sheet.getRange(startRow, 1, numRows, 4).getValues();
 
     const result = data.reverse().map(row => ({
         id: row[0],
         name: row[1],
-        message: row[3],
-        date: formatDate(row[4])
+        message: row[2],
+        date: formatDate(row[3])
     }));
 
     return { success: true, data: result };
@@ -119,7 +122,7 @@ function readAllGuestbook(page, pageSize) {
 
     const total = lastRow - 1;
     const totalPages = Math.ceil(total / pageSize);
-    const allData = sheet.getRange(2, 1, total, 5).getValues();
+    const allData = sheet.getRange(2, 1, total, 4).getValues();
 
     // 최신순 정렬
     allData.reverse();
@@ -132,8 +135,8 @@ function readAllGuestbook(page, pageSize) {
     const result = pageData.map(row => ({
         id: row[0],
         name: row[1],
-        message: row[3],
-        date: formatDate(row[4])
+        message: row[2],
+        date: formatDate(row[3])
     }));
 
     return {
@@ -145,38 +148,37 @@ function readAllGuestbook(page, pageSize) {
     };
 }
 
-// 방명록 작성
-function writeGuestbook(name, password, message) {
+// 방명록 작성 (비밀번호 없이)
+function writeGuestbook(name, message) {
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(GUESTBOOK_SHEET);
 
     // 헤더가 없으면 추가
     if (sheet.getLastRow() === 0) {
-        sheet.appendRow(['ID', '이름', '비밀번호', '메시지', '작성일']);
+        sheet.appendRow(['ID', '이름', '메시지', '작성일']);
     }
 
     const id = Utilities.getUuid();
-    const hashedPassword = hashPassword(password);
     const date = new Date();
 
-    sheet.appendRow([id, name, hashedPassword, message, date]);
+    sheet.appendRow([id, name, message, date]);
 
     return { success: true, id: id };
 }
 
-// 방명록 삭제
-function deleteGuestbook(id, password) {
+// 방명록 삭제 (관리자 비밀번호로만 삭제)
+function deleteGuestbook(id, adminPassword) {
+    // 관리자 비밀번호 확인
+    if (adminPassword !== ADMIN_PASSWORD) {
+        return { success: false, error: '관리자 비밀번호가 일치하지 않습니다' };
+    }
+
     const sheet = SpreadsheetApp.openById(SPREADSHEET_ID).getSheetByName(GUESTBOOK_SHEET);
     const data = sheet.getDataRange().getValues();
 
     for (let i = 1; i < data.length; i++) {
         if (data[i][0] === id) {
-            const hashedPassword = hashPassword(password);
-            if (data[i][2] === hashedPassword) {
-                sheet.deleteRow(i + 1);
-                return { success: true };
-            } else {
-                return { success: false, error: '비밀번호가 일치하지 않습니다' };
-            }
+            sheet.deleteRow(i + 1);
+            return { success: true };
         }
     }
 
@@ -203,11 +205,6 @@ function writeAttendance(name, side, count, meal) {
 }
 
 // ========== 유틸리티 함수 ==========
-
-function hashPassword(password) {
-    const hash = Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256, password);
-    return hash.map(b => ('0' + (b & 0xFF).toString(16)).slice(-2)).join('');
-}
 
 function formatDate(date) {
     if (!date) return '';
