@@ -582,6 +582,7 @@ body {
     justify-content: space-between;
     align-items: center;
     font-size: 1rem;
+    color: var(--text-dark);
     background: var(--bg-light);
     border: none;
     border-radius: 8px;
