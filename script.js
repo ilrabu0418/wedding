@@ -15,6 +15,8 @@ const CONFIG = {
 
     // 카카오톡 공유 설정
     KAKAO_APP_KEY: 'YOUR_KAKAO_APP_KEY',
+    SHARE_URL: 'https://ilrabu0418.github.io/wedding/',
+    COPY_URL: 'https://m.site.naver.com/1ZcFz',
 
     // 방명록 설정
     GUESTBOOK_PREVIEW_COUNT: 3,  // 메인 페이지에 표시할 방명록 개수
@@ -761,11 +763,9 @@ END:VCALENDAR`;
     }
 
     // 링크 복사
-    const shareUrl = 'https://m.site.naver.com/1ZcFz';
-
     if (btnCopyLink) {
         btnCopyLink.addEventListener('click', () => {
-            copyToClipboard(shareUrl);
+            copyToClipboard(CONFIG.COPY_URL);
             showToast('링크가 복사되었습니다');
         });
     }
@@ -773,7 +773,6 @@ END:VCALENDAR`;
     // 카카오톡 공유
     if (btnKakaoShare) {
         btnKakaoShare.addEventListener('click', () => {
-            console.log('카카오톡 공유 URL:', shareUrl);
             if (typeof Kakao !== 'undefined' && Kakao.isInitialized()) {
                 Kakao.Share.sendDefault({
                     objectType: 'feed',
@@ -782,16 +781,16 @@ END:VCALENDAR`;
                         description: '2026년 5월 10일 일요일 오후 12시\n에스칼라디움 3층 단독홀',
                         imageUrl: 'https://ilrabu0418.github.io/wedding/images/main.jpg',
                         link: {
-                            mobileWebUrl: shareUrl,
-                            webUrl: shareUrl
+                            mobileWebUrl: CONFIG.SHARE_URL,
+                            webUrl: CONFIG.SHARE_URL
                         }
                     },
                     buttons: [
                         {
                             title: '청첩장 보기',
                             link: {
-                                mobileWebUrl: shareUrl,
-                                webUrl: shareUrl
+                                mobileWebUrl: CONFIG.SHARE_URL,
+                                webUrl: CONFIG.SHARE_URL
                             }
                         }
                     ]
