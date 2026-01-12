@@ -315,11 +315,23 @@ body {
 
 .gallery-page {
     min-width: 100%;
-    display: none;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
 }
 
 .gallery-page.active {
-    display: block;
+    position: relative;
+    opacity: 1;
+    visibility: visible;
+}
+
+.gallery-pages {
+    position: relative;
 }
 
 .gallery-grid {
