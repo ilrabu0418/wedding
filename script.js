@@ -35,7 +35,7 @@ document.addEventListener('DOMContentLoaded', function() {
     initDdayCounter();
     initMap();
     initGallery();
-    initGallerySlider();
+    initGalleryToggle();
     initContactToggle();
     initAccountToggle();
     initGuestbook();
@@ -241,52 +241,22 @@ function initMap() {
     });
 }
 
-// ========== 갤러리 슬라이더 ==========
-function initGallerySlider() {
-    const pages = document.querySelectorAll('.gallery-page');
-    const dots = document.querySelectorAll('.gallery-dot');
-    const slider = document.querySelector('.gallery-slider');
+// ========== 갤러리 더보기/닫기 ==========
+function initGalleryToggle() {
+    const toggleBtn = document.getElementById('gallery-toggle');
+    const grid = document.querySelector('.gallery-grid');
 
-    if (!slider || pages.length === 0) return;
+    if (!toggleBtn || !grid) return;
 
-    let currentPage = 0;
-    let startX = 0;
-    let endX = 0;
+    let expanded = false;
 
-    // 페이지 변경 함수
-    function goToPage(pageIndex) {
-        pages.forEach((page, i) => {
-            page.classList.toggle('active', i === pageIndex);
-        });
-        dots.forEach((dot, i) => {
-            dot.classList.toggle('active', i === pageIndex);
-        });
-        currentPage = pageIndex;
-    }
+    toggleBtn.addEventListener('click', () => {
+        expanded = !expanded;
+        grid.classList.toggle('expanded', expanded);
+        toggleBtn.textContent = expanded ? '닫기 ▲' : '더보기 ▼';
 
-    // 점 클릭 이벤트
-    dots.forEach(dot => {
-        dot.addEventListener('click', () => {
-            const pageIndex = parseInt(dot.getAttribute('data-page'));
-            goToPage(pageIndex);
-        });
-    });
-
-    // 스와이프 이벤트
-    slider.addEventListener('touchstart', (e) => {
-        startX = e.touches[0].clientX;
-    });
-
-    slider.addEventListener('touchend', (e) => {
-        endX = e.changedTouches[0].clientX;
-        const diff = startX - endX;
-
-        if (Math.abs(diff) > 50) {
-            if (diff > 0 && currentPage < pages.length - 1) {
-                goToPage(currentPage + 1);
-            } else if (diff < 0 && currentPage > 0) {
-                goToPage(currentPage - 1);
-            }
+        if (!expanded) {
+            document.getElementById('gallery').scrollIntoView({ behavior: 'smooth' });
         }
     });
 }
