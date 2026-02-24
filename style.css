@@ -1,14 +1,14 @@
 /* ========== 기본 스타일 ========== */
 :root {
-    --primary-color: #b08968;
-    --primary-light: #ddb892;
-    --primary-dark: #7f5539;
+    --primary-color: #9b8bb4;
+    --primary-light: #c4b8d6;
+    --primary-dark: #6d5e87;
     --text-color: #333;
     --text-light: #666;
     --text-muted: #999;
     --bg-color: #fff;
-    --bg-light: #faf8f5;
-    --border-color: #e8e2dc;
+    --bg-light: #f7f5fa;
+    --border-color: #e2dce9;
     --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     --font-serif: 'Noto Serif KR', serif;
     --font-sans: 'Noto Sans KR', sans-serif;

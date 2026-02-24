@@ -316,6 +316,26 @@ function initGallery() {
         if (e.key === 'ArrowRight') showImage(currentIndex + 1);
         if (e.key === 'Escape') modal.classList.remove('show');
     });
+
+    // 스와이프 네비게이션
+    let touchStartX = 0;
+    let touchEndX = 0;
+
+    modal.addEventListener('touchstart', (e) => {
+        touchStartX = e.changedTouches[0].screenX;
+    }, { passive: true });
+
+    modal.addEventListener('touchend', (e) => {
+        touchEndX = e.changedTouches[0].screenX;
+        const diff = touchStartX - touchEndX;
+        if (Math.abs(diff) > 50) {
+            if (diff > 0) {
+                showImage(currentIndex + 1);
+            } else {
+                showImage(currentIndex - 1);
+            }
+        }
+    }, { passive: true });
 }
 
 // ========== 연락처 토글 ==========
