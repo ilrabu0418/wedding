@@ -78,7 +78,7 @@ function initCover() {
     function openInvitation() {
         cover.classList.add('hidden');
         invitation.classList.add('visible');
-        document.body.style.overflow = '';
+        document.body.classList.remove('cover-locked');
     }
 
     if (openBtn) {
@@ -96,8 +96,8 @@ function initCover() {
         if (dy > 60) openInvitation();
     });
 
-    // 커버가 보이는 동안 스크롤 방지
-    document.body.style.overflow = 'hidden';
+    // 커버가 보이는 동안 스크롤 방지 (iOS 호환)
+    document.body.classList.add('cover-locked');
 }
 
 // ========== 스크롤 애니메이션 ==========
