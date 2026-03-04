@@ -7,6 +7,9 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <!-- 배경 레이어 -->
+    <div class="v3-bg-layer"></div>
+
     <!-- 헤더 -->
     <header class="page-header">
         <a href="index.html" class="btn-back">← 돌아가기</a>
@@ -26,16 +29,18 @@
     </div>
 
     <!-- 방명록 작성 폼 -->
-    <section class="section">
-        <form id="guestbook-form" class="guestbook-form">
-            <input type="text" id="gb-name" name="name" placeholder="이름" required style="width: 100%; padding: 12px 15px; font-size: 0.9rem; border: 1px solid var(--border-color); border-radius: 8px; margin-bottom: 10px;">
-            <textarea id="gb-message" name="message" placeholder="축하 메시지를 입력해주세요" required></textarea>
-            <button type="submit" class="btn-submit">메시지 남기기</button>
-        </form>
+    <section class="v3-section">
+        <div class="v3-panel glass">
+            <form id="guestbook-form" class="guestbook-form">
+                <input type="text" id="gb-name" name="name" placeholder="이름" required>
+                <textarea id="gb-message" name="message" placeholder="축하 메시지를 입력해주세요" required></textarea>
+                <button type="submit" class="btn-submit">메시지 남기기</button>
+            </form>
+        </div>
     </section>
 
     <!-- 방명록 전체 목록 -->
-    <section class="section">
+    <section class="v3-section">
         <div class="guestbook-stats">
             총 <span id="total-count">0</span>개의 축하 메시지
         </div>
@@ -79,8 +84,8 @@
 
     <script src="script.js"></script>
     <script>
-        // 전체 목록 페이지용 초기화
         document.addEventListener('DOMContentLoaded', function() {
+            initRandomTheme();
             loadAllGuestbook();
             initAdminMode();
         });
